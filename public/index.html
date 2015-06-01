@@ -18,7 +18,7 @@
                     if (sec  < 10) sec  = "0" + sec;
 
                     // デジタル時計
-                    $("#time").text(hour + ":" + min + ":" + sec);
+                    $("#time").text("[Client]\t" + date);
 
                     // 針の長さ
                     var sec_hand  = 60;
@@ -55,12 +55,24 @@
                     drawHand(min_hand,  '#0f0', min_rad);
                     drawHand(hour_hand, '#00f', hour_rad);
 
+                    var date = new Date();
+                    $.ajax({
+                        type: "GET",
+                        url : "/time",
+                        success: function(msg){
+                            $("#server_time").text("[Server]\t" + msg);
+                            var diff_time = new Date(msg).getTime() - new Date(date).getTime();
+                            $("#diff_time").text("[Diff(ms)]\t" + diff_time);
+                        }
+                    });
                 }, 1000);
             });
         </script>
     </head>
     <body>
         <div id="time"> </div>
+        <div id="server_time"> </div>
+        <div id="diff_time"> </div>
         <canvas id="analog_clock" width="300" height="300">
         </canvas>
     </body>
