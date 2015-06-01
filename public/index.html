@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>JS TEST</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="./js/jcanvas.min.js"></script>
+        <script>
+            $(function(){
+                setInterval(function(){
+                    var date = new Date();
+                    var hour = date.getHours();
+                    var min  = date.getMinutes();
+                    var sec  = date.getSeconds();
+
+                    if (hour < 10) hour = "0" + hour;
+                    if (min  < 10) min  = "0" + min;
+                    if (sec  < 10) sec  = "0" + sec;
+
+                    // デジタル時計
+                    $("#time").text(hour + ":" + min + ":" + sec);
+
+                    // 針の長さ
+                    var sec_hand  = 60;
+                    var min_hand  = 80;
+                    var hour_hand = 100;
+
+                    // 12時と針の間の角度
+                    var sec_deg  = (sec  / 60) * 360;
+                    var min_deg  = (min  / 60) * 360;
+                    var hour_deg = (hour / 12) * 360;
+
+                    console.log(min_deg);
+
+                    // deg to rag
+                    var sec_rad  = sec_deg  * (Math.PI / 180);
+                    var min_rad  = min_deg  * (Math.PI / 180);
+                    var hour_rad = hour_deg * (Math.PI / 180);
+
+                    $('canvas').clearCanvas();
+
+                    function drawHand(length, color, rad) {
+                        var center_x = 150;
+                        var center_y = 150;
+                        $('canvas').drawLine({
+                            strokeStyle: color,
+                            strokeWidth: 5,
+                            x1: center_x, y1: center_y,
+                            x2: center_x + length * Math.sin(rad),
+                            y2: center_y - length * Math.cos(rad)
+                        }); 
+                    }
+
+                    drawHand(sec_hand,  '#f00', sec_rad);
+                    drawHand(min_hand,  '#0f0', min_rad);
+                    drawHand(hour_hand, '#00f', hour_rad);
+
+                }, 1000);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="time"> </div>
+        <canvas id="analog_clock" width="300" height="300">
+        </canvas>
+    </body>
+</html>
